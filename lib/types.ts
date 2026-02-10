@@ -73,15 +73,22 @@ export interface WorkoutSession {
   completed: boolean;
 }
 
+export interface FoodNutrition {
+  foodName: string;
+  quantity: number;
+  unit: 'g' | 'oz' | 'cup' | 'piece' | 'ml';
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+  fiber: number;
+}
+
 export interface MealEntry {
   id: string;
   timestamp: string;
   category: 'breakfast' | 'lunch' | 'evening_snacks' | 'dinner' | 'miscellaneous';
-  items: {
-    name: string;
-    quantity: string;
-    calories?: number;
-  }[];
+  items: (FoodNutrition)[];
 }
 
 export interface DailyDiet {
@@ -89,31 +96,47 @@ export interface DailyDiet {
   meals: MealEntry[];
   proteinIntake: number;
   proteinGoal: number;
+  carbs: number;
+  fats: number;
   totalCalories: number;
   consistencyScore: number;
+}
+
+export interface HabitWarningLevel {
+  level: 'safe' | 'caution' | 'warning';
+  threshold: number;
+  xpPenalty: number;
+  message: string;
 }
 
 export interface NegativeHabit {
   cigarettes: {
     count: number;
+    warningLevel: 'safe' | 'caution' | 'warning';
     xpPenalty: number;
+    breakStreak: boolean;
   };
   masturbation: {
     count: number;
-    triggers: ('boredom' | 'stress' | 'late_night' | 'scrolling' | 'loneliness')[];
+    warningLevel: 'safe' | 'caution' | 'warning';
     xpPenalty: number;
+    breakStreak: boolean;
   };
   alcohol: {
     count: number;
-    type: ('beer' | 'liquor' | 'wine')[];
+    warningLevel: 'safe' | 'caution' | 'warning';
     xpPenalty: number;
+    breakStreak: boolean;
   };
   screenTime: {
+    total: number;
     instagram: number;
     youtube: number;
     netflix: number;
     other: number;
+    warningLevel: 'safe' | 'caution' | 'warning';
     xpPenalty: number;
+    breakStreak: boolean;
   };
 }
 
