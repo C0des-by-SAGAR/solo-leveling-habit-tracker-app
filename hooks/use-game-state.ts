@@ -9,6 +9,9 @@ import type {
   DailyVitals,
   Skill,
   StreakData,
+  NegativeHabit,
+  DailySleep,
+  DailySummary,
 } from '@/lib/types'
 
 const STORAGE_KEY = 'solo-leveling-game-state'
@@ -217,11 +220,20 @@ const DEFAULT_STATE: GameState = {
     date: new Date().toISOString().split('T')[0],
     meals: [],
     proteinIntake: 0,
+    proteinGoal: 150,
     totalCalories: 0,
     consistencyScore: 0,
   },
   skills: DEFAULT_SKILLS,
   streak: DEFAULT_STREAK,
+  habits: {
+    cigarettes: { count: 0, xpPenalty: 0 },
+    masturbation: { count: 0, triggers: [], xpPenalty: 0 },
+    alcohol: { count: 0, type: [], xpPenalty: 0 },
+    screenTime: { instagram: 0, youtube: 0, netflix: 0, other: 0, xpPenalty: 0 },
+  },
+  sleepLog: [],
+  dailySummaries: [],
 }
 
 export function useGameState() {
@@ -350,12 +362,96 @@ export function useGameState() {
     [state, saveState]
   )
 
+  const logHabit = useCallback(
+    (type: 'cigarettes' | 'masturbation' | 'alcohol' | 'screenTime', data: any) => {
+      const newState = { ...state }
+      
+      switch (type) {
+        case 'cigarettes':
+          newState.habits.cigarettes.count += 1
+          if (newState.habits.cigarettes.count > 2) {
+            newState.habits.cigarettes.xpPenalty = (newState.habits.cigarettes.count - 2) * 5
+            newState.profile.currentXP -= 5
+          }
+          break
+        case 'alcohol':
+          newState.habits.alcohol.count += 1
+          if (newState.habits.alcohol.count > 1) {
+            newState.habits.alcohol.xpPenalty = (newState.habits.alcohol.count - 1) * 15
+            newState.profile.currentXP -= 15
+          }
+          break
+        case 'screenTime':
+          newState.habits.screenTime.instagram += data.instagram || 0
+          newState.habits.screenTime.youtube += data.youtube || 0
+          newState.habits.screenTime.netflix += data.netflix || 0
+          newState.habits.screenTime.other += data.other || 0
+          const total = newState.habits.screenTime.instagram + newState.habits.screenTime.youtube + newState.habits.screenTime.netflix + newState.habits.screenTime.other
+          if (total > 120) {
+            const penalty = Math.floor((total - 120) / 30) * 10
+            newState.habits.screenTime.xpPenalty = penalty
+            newState.profile.currentXP -= penalty
+          }
+          break
+      }
+      
+      saveState(newState)
+    },
+    [state, saveState]
+  )
+
+  const logSleep = useCallback(
+    (bedTime: string, wakeTime: string, quality: 1 | 2 | 3) => {
+      const newState = { ...state }
+      const bed = new Date(`2000-01-01 ${bedTime}`)
+      const wake = new Date(`2000-01-02 ${wakeTime}`)
+      const duration = (wake.getTime() - bed.getTime()) / (1000 * 60 * 60)
+      
+      newState.sleepLog.push({
+        date: new Date().toISOString().split('T')[0],
+        bedTime,
+        wakeTime,
+        duration: Math.round(duration * 10) / 10,
+        quality,
+        timestamp: new Date().toISOString(),
+      })
+      
+      saveState(newState)
+    },
+    [state, saveState]
+  )
+
+  const logDailySummary = useCallback(
+    (oneWin: string, totalXpGained: number, totalXpLost: number) => {
+      const newState = { ...state }
+      const completionRate = (newState.dailyQuests.filter((q) => q.completed).length / newState.dailyQuests.length) * 100
+      
+      newState.dailySummaries.push({
+        date: new Date().toISOString().split('T')[0],
+        oneWin,
+        totalXPGained: totalXpGained,
+        totalXPLost: totalXpLost,
+        netXP: totalXpGained - totalXpLost,
+        questCompletionRate: completionRate,
+        statsGained: {},
+        systemWarnings: [],
+        rank: newState.profile.rank,
+      })
+      
+      saveState(newState)
+    },
+    [state, saveState]
+  )
+
   return {
     state,
     isLoaded,
     completeQuest,
     addWorkout,
     logMeal,
+    logHabit,
+    logSleep,
+    logDailySummary,
     saveState,
     resetDailyQuests,
     updateProfileName,

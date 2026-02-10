@@ -12,12 +12,17 @@ import { SkillsGrid } from '@/components/skills-grid'
 import { StreakView } from '@/components/streak-view'
 import { LevelUpModal } from '@/components/level-up-modal'
 import { ActivityLogger } from '@/components/activity-logger'
+import { NegativeHabitsTracker } from '@/components/negative-habits-tracker'
+import { NutritionLogger } from '@/components/nutrition-logger'
+import { SleepVitalsTracker } from '@/components/sleep-vitals-tracker'
+import { EnhancedQuestCard } from '@/components/enhanced-quest-card'
+import { DailyReview } from '@/components/daily-review'
 import { Button } from '@/components/ui/button'
 
-type TabType = 'status' | 'quests' | 'skills' | 'streak'
+type TabType = 'status' | 'quests' | 'skills' | 'streak' | 'habits' | 'nutrition' | 'vitals' | 'review'
 
 export default function Home() {
-  const { state, isLoaded, completeQuest, resetDailyQuests, addWorkout, logMeal } =
+  const { state, isLoaded, completeQuest, resetDailyQuests, addWorkout, logMeal, logHabit, logSleep, logDailySummary } =
     useGameState()
   const [activeTab, setActiveTab] = useState<TabType>('status')
   const [showLevelUp, setShowLevelUp] = useState(false)
@@ -219,6 +224,121 @@ export default function Home() {
                 </div>
 
                 <StreakView streak={state.streak} />
+              </motion.div>
+            )}
+
+            {/* HABITS TAB */}
+            {activeTab === 'habits' && (
+              <motion.div
+                key="habits"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-4"
+              >
+                <div className="glass-card p-4">
+                  <h3 className="text-sm font-display text-primary mb-2">
+                    NEGATIVE HABITS
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Monitor and reduce harmful habits
+                  </p>
+                </div>
+
+                <NegativeHabitsTracker habits={state.habits} onLogHabit={logHabit} />
+              </motion.div>
+            )}
+
+            {/* NUTRITION TAB */}
+            {activeTab === 'nutrition' && (
+              <motion.div
+                key="nutrition"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-4"
+              >
+                <div className="glass-card p-4">
+                  <h3 className="text-sm font-display text-primary mb-2">
+                    NUTRITION TRACKER
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Track meals and protein intake
+                  </p>
+                </div>
+
+                <NutritionLogger
+                  diet={state.diet}
+                  onAddMeal={(category, itemName, protein) => {
+                    const newState = { ...state }
+                    const meal = newState.diet.meals.find((m) => m.category === category)
+                    if (!meal) {
+                      newState.diet.meals.push({
+                        id: Date.now().toString(),
+                        timestamp: new Date().toISOString(),
+                        category,
+                        items: [{ name: itemName, quantity: protein.toString(), calories: 0 }],
+                      })
+                    } else {
+                      meal.items.push({ name: itemName, quantity: protein.toString(), calories: 0 })
+                    }
+                    newState.diet.proteinIntake += protein
+                  }}
+                  onRemoveMeal={() => {}}
+                />
+              </motion.div>
+            )}
+
+            {/* VITALS TAB */}
+            {activeTab === 'vitals' && (
+              <motion.div
+                key="vitals"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-4"
+              >
+                <div className="glass-card p-4">
+                  <h3 className="text-sm font-display text-primary mb-2">
+                    VITALS & SLEEP
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Track energy, focus, mood, and sleep quality
+                  </p>
+                </div>
+
+                <SleepVitalsTracker
+                  vitals={state.vitals}
+                  sleepLog={state.sleepLog}
+                  onLogSleep={logSleep}
+                  onUpdateVitals={(energy, focus, mood) => {
+                    state.vitals.energyRating = energy
+                    state.vitals.focusRating = focus
+                    state.vitals.moodRating = mood
+                  }}
+                />
+              </motion.div>
+            )}
+
+            {/* REVIEW TAB */}
+            {activeTab === 'review' && (
+              <motion.div
+                key="review"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-4"
+              >
+                <div className="glass-card p-4">
+                  <h3 className="text-sm font-display text-primary mb-2">
+                    DAILY REVIEW
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Reflect on your day and review progress
+                  </p>
+                </div>
+
+                <DailyReview gameState={state} onSubmitReview={(oneWin) => logDailySummary(oneWin, 0, 0)} />
               </motion.div>
             )}
           </AnimatePresence>

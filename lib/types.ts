@@ -33,6 +33,12 @@ export interface DailyVitals {
   };
 }
 
+export interface QuestSubGoal {
+  id: string;
+  description: string;
+  completed: boolean;
+}
+
 export interface DailyQuest {
   id: string;
   name: string;
@@ -44,6 +50,8 @@ export interface DailyQuest {
   completedAt?: string;
   category: 'core' | 'optional';
   icon: string;
+  subGoals?: QuestSubGoal[];
+  skillId?: string;
 }
 
 export interface WorkoutSession {
@@ -80,8 +88,42 @@ export interface DailyDiet {
   date: string;
   meals: MealEntry[];
   proteinIntake: number;
+  proteinGoal: number;
   totalCalories: number;
   consistencyScore: number;
+}
+
+export interface NegativeHabit {
+  cigarettes: {
+    count: number;
+    xpPenalty: number;
+  };
+  masturbation: {
+    count: number;
+    triggers: ('boredom' | 'stress' | 'late_night' | 'scrolling' | 'loneliness')[];
+    xpPenalty: number;
+  };
+  alcohol: {
+    count: number;
+    type: ('beer' | 'liquor' | 'wine')[];
+    xpPenalty: number;
+  };
+  screenTime: {
+    instagram: number;
+    youtube: number;
+    netflix: number;
+    other: number;
+    xpPenalty: number;
+  };
+}
+
+export interface DailySleep {
+  date: string;
+  bedTime: string;
+  wakeTime: string;
+  duration: number;
+  quality: 1 | 2 | 3;
+  timestamp: string;
 }
 
 export interface Skill {
@@ -127,4 +169,7 @@ export interface GameState {
   diet: DailyDiet;
   skills: Skill[];
   streak: StreakData;
+  habits: NegativeHabit;
+  sleepLog: DailySleep[];
+  dailySummaries: DailySummary[];
 }
