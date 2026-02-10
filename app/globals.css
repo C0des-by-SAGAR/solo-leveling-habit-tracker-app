@@ -127,6 +127,96 @@ body {
     background-size: 200% 200%;
     animation: gradient-shift 3s ease infinite;
   }
+
+  @keyframes epic-glow {
+    0%, 100% {
+      box-shadow: 
+        0 0 10px rgba(168, 85, 247, 0.4),
+        0 0 20px rgba(6, 182, 212, 0.2),
+        inset 0 0 10px rgba(168, 85, 247, 0.1);
+    }
+    50% {
+      box-shadow: 
+        0 0 30px rgba(168, 85, 247, 0.8),
+        0 0 60px rgba(6, 182, 212, 0.5),
+        inset 0 0 20px rgba(168, 85, 247, 0.3);
+    }
+  }
+
+  .epic-glow {
+    animation: epic-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes neon-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      text-shadow: 
+        0 0 10px rgba(168, 85, 247, 1),
+        0 0 20px rgba(168, 85, 247, 0.8),
+        0 0 30px rgba(6, 182, 212, 0.6);
+    }
+    20%, 24%, 55% {
+      text-shadow: 
+        0 0 5px rgba(168, 85, 247, 0.5),
+        0 0 10px rgba(6, 182, 212, 0.2);
+    }
+  }
+
+  .neon-text {
+    animation: neon-flicker 3s infinite;
+  }
+
+  @keyframes shadow-float {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px);
+      opacity: 0.8;
+    }
+    25% {
+      transform: translateY(-10px) translateX(5px);
+      opacity: 0.9;
+    }
+    50% {
+      transform: translateY(-5px) translateX(-5px);
+      opacity: 1;
+    }
+    75% {
+      transform: translateY(5px) translateX(5px);
+      opacity: 0.9;
+    }
+  }
+
+  .shadow-float {
+    animation: shadow-float 4s ease-in-out infinite;
+  }
+
+  @keyframes border-glow {
+    0%, 100% {
+      border-color: rgba(168, 85, 247, 0.5);
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+    }
+    50% {
+      border-color: rgba(6, 182, 212, 0.8);
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.6), 0 0 50px rgba(168, 85, 247, 0.4);
+    }
+  }
+
+  .border-glow {
+    animation: border-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-scale {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+  }
+
+  .pulse-scale {
+    animation: pulse-scale 2s ease-in-out infinite;
+  }
 }
 
 @layer base {

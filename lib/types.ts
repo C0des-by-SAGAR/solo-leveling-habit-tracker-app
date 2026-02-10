@@ -149,6 +149,13 @@ export interface DailySleep {
   timestamp: string;
 }
 
+export interface SkillAbility {
+  level: number;
+  name: string;
+  description: string;
+  statBonus: Partial<Stats>;
+}
+
 export interface Skill {
   id: string;
   name: string;
@@ -158,6 +165,9 @@ export interface Skill {
   xpToNextLevel: number;
   category: 'academic' | 'technical' | 'business' | 'physical' | 'creative';
   icon: string;
+  relatedQuests: string[];
+  abilities: SkillAbility[];
+  unlockedAbilities: number[];
 }
 
 export interface DailySummary {

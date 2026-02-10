@@ -17,6 +17,8 @@ import { NutritionLogger } from '@/components/nutrition-logger'
 import { SleepVitalsTracker } from '@/components/sleep-vitals-tracker'
 import { EnhancedQuestCard } from '@/components/enhanced-quest-card'
 import { DailyReview } from '@/components/daily-review'
+import { TaskAlerts } from '@/components/task-alerts'
+import { ShadowSoldierPortrait } from '@/components/shadow-soldier'
 import { Button } from '@/components/ui/button'
 
 type TabType = 'status' | 'quests' | 'skills' | 'streak' | 'habits' | 'nutrition' | 'vitals' | 'review'
