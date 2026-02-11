@@ -82,20 +82,28 @@ export default function Home() {
     .reduce((sum, q) => sum + q.xpReward, 0)
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary relative">
-      {/* Shadow Soldiers Background Effect */}
-      {incompleteTasks.length > 0 && (
-        <div className="fixed top-0 right-0 opacity-10 pointer-events-none z-0">
-          <ShadowSoldierPortrait count={Math.min(incompleteTasks.length, 3)} size="lg" />
-        </div>
-      )}
+    <div className="min-h-screen text-text-primary relative overflow-hidden">
+      {/* Themed Background with Characters */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-primary to-bg-primary/80" />
+        <img 
+          src="/jinwoo-bg.jpg" 
+          alt="Jin Woo"
+          className="absolute left-0 top-1/2 -translate-y-1/2 h-screen object-cover opacity-30"
+        />
+        <img 
+          src="/igris-bg.jpg" 
+          alt="Igris"
+          className="absolute right-0 top-1/2 -translate-y-1/2 h-screen object-cover opacity-30"
+        />
+      </div>
 
       <div className="w-screen max-w-md mx-auto pb-20 relative z-10">
-        {/* Epic Header */}
-        <div className="sticky top-0 z-40 bg-gradient-to-b from-bg-primary via-bg-primary to-transparent px-3 py-2 border-b border-primary/20 backdrop-blur">
+        {/* Epic Header with Glassmorphism */}
+        <div className="sticky top-0 z-40 bg-black/40 backdrop-blur-xl border-b border-primary/20 px-3 py-2">
           <div className="flex items-center justify-between mb-2">
             <div className="min-w-0">
-              <h1 className="text-xl font-display font-black text-primary neon-text truncate">
+              <h1 className="cyan-neon truncate">
                 SOLO LEVELING
               </h1>
               <p className="text-xs text-accent tracking-widest">SHADOW MONARCH</p>
