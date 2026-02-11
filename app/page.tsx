@@ -58,31 +58,102 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-bg-primary flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="text-4xl animate-pulse">⚔️</div>
-          <p className="text-text-secondary font-display">
+          <div className="text-6xl animate-pulse">⚔️</div>
+          <p className="text-text-secondary font-display tracking-widest">
             INITIALIZING SYSTEM...
           </p>
+          <div className="mt-8 space-y-2">
+            <div className="h-1 bg-primary/30 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary to-accent"
+                animate={{ width: ['0%', '100%'] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     )
   }
 
+  const incompleteTasks = state.dailyQuests.filter((q) => !q.completed)
+  const totalXpGained = state.dailyQuests
+    .filter((q) => q.completed)
+    .reduce((sum, q) => sum + q.xpReward, 0)
+
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary">
-      <div className="max-w-md mx-auto pb-24">
-        {/* Header */}
-        <div className="sticky top-0 z-40 bg-gradient-to-b from-bg-primary to-transparent p-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-display font-bold text-primary">
-              SOLO LEVELING
-            </h1>
-            <div className="text-sm text-text-secondary">
-              {new Date().toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-              })}
+    <div className="min-h-screen bg-bg-primary text-text-primary relative">
+      {/* Shadow Soldiers Background Effect */}
+      {incompleteTasks.length > 0 && (
+        <div className="fixed top-0 right-0 opacity-10 pointer-events-none z-0">
+          <ShadowSoldierPortrait count={Math.min(incompleteTasks.length, 3)} size="lg" />
+        </div>
+      )}
+
+      <div className="max-w-md mx-auto pb-24 relative z-10">
+        {/* Epic Header */}
+        <div className="sticky top-0 z-40 bg-gradient-to-b from-bg-primary via-bg-primary to-transparent p-4 border-b border-primary/20 backdrop-blur">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h1 className="text-2xl font-display font-black text-primary neon-text">
+                SOLO LEVELING
+              </h1>
+              <p className="text-xs text-accent tracking-widest">SHADOW MONARCH SYSTEM</p>
+            </div>
+            <div className="text-right">
+              <div className="text-sm font-mono-display text-primary">
+                {new Date().toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </div>
+              <div className="text-xs text-text-muted font-display">
+                {state.profile.rank.toUpperCase()}
+              </div>
             </div>
           </div>
+
+          {/* Quick Stats Bar */}
+          <div className="grid grid-cols-3 gap-2">
+            <motion.div
+              className="bg-primary/10 border border-primary/30 rounded px-2 py-1.5"
+              whileHover={{ scale: 1.05 }}
+            >
+              <p className="text-xs text-text-muted uppercase tracking-wide">Level</p>
+              <p className="text-lg font-display font-bold text-primary">
+                {state.profile.level}
+              </p>
+            </motion.div>
+            <motion.div
+              className="bg-accent/10 border border-accent/30 rounded px-2 py-1.5"
+              whileHover={{ scale: 1.05 }}
+            >
+              <p className="text-xs text-text-muted uppercase tracking-wide">XP</p>
+              <p className="text-lg font-display font-bold text-accent">
+                +{totalXpGained}
+              </p>
+            </motion.div>
+            <motion.div
+              className="bg-success/10 border border-success/30 rounded px-2 py-1.5"
+              whileHover={{ scale: 1.05 }}
+            >
+              <p className="text-xs text-text-muted uppercase tracking-wide">Quests</p>
+              <p className="text-lg font-display font-bold text-success">
+                {state.dailyQuests.filter((q) => q.completed).length}/{state.dailyQuests.length}
+              </p>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Task Alerts with Shadow Soldiers */}
+        <div className="px-4 pt-4">
+          <TaskAlerts 
+            incompleteTasks={incompleteTasks} 
+            onTaskClick={(taskId) => {
+              setActiveTab('quests')
+              handleQuestComplete(taskId)
+            }}
+          />
         </div>
 
         <div className="px-4 space-y-4">
