@@ -21,8 +21,8 @@ export function BottomNav({ active, onChange }: BottomNavProps) {
   ]
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-bg-primary/95 backdrop-blur border-t border-primary/20 px-2 py-2 max-w-md mx-auto">
-      <div className="flex justify-around gap-1 overflow-x-auto pb-1">
+    <div className="fixed bottom-0 left-0 right-0 bg-bg-primary/98 backdrop-blur border-t border-primary/20 max-w-md mx-auto z-50">
+      <div className="flex gap-0.5 overflow-x-auto scrollbar-hide py-2 px-1">
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = active === tab.id
@@ -31,23 +31,22 @@ export function BottomNav({ active, onChange }: BottomNavProps) {
             <motion.button
               key={tab.id}
               onClick={() => onChange(tab.id)}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-colors flex-shrink-0 ${
+              className={`flex flex-col items-center gap-0.5 px-1.5 py-1 rounded transition-colors flex-shrink-0 ${
                 isActive
-                  ? 'bg-primary/20 text-primary'
+                  ? 'bg-primary/30 text-primary'
                   : 'text-text-secondary hover:text-text-primary'
               }`}
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
             >
-              <Icon size={16} />
-              <span className="text-xs font-display font-semibold whitespace-nowrap">
+              <Icon size={14} />
+              <span className="text-xs font-display font-bold whitespace-nowrap">
                 {tab.label}
               </span>
 
               {isActive && (
                 <motion.div
                   layoutId="activeIndicator"
-                  className="h-1 w-6 bg-primary rounded-full"
+                  className="h-0.5 w-4 bg-primary rounded-full"
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
               )}

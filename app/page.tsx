@@ -90,43 +90,43 @@ export default function Home() {
         </div>
       )}
 
-      <div className="max-w-md mx-auto pb-24 relative z-10">
+      <div className="w-screen max-w-md mx-auto pb-20 relative z-10">
         {/* Epic Header */}
-        <div className="sticky top-0 z-40 bg-gradient-to-b from-bg-primary via-bg-primary to-transparent p-4 border-b border-primary/20 backdrop-blur">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <h1 className="text-2xl font-display font-black text-primary neon-text">
+        <div className="sticky top-0 z-40 bg-gradient-to-b from-bg-primary via-bg-primary to-transparent px-3 py-2 border-b border-primary/20 backdrop-blur">
+          <div className="flex items-center justify-between mb-2">
+            <div className="min-w-0">
+              <h1 className="text-xl font-display font-black text-primary neon-text truncate">
                 SOLO LEVELING
               </h1>
-              <p className="text-xs text-accent tracking-widest">SHADOW MONARCH SYSTEM</p>
+              <p className="text-xs text-accent tracking-widest">SHADOW MONARCH</p>
             </div>
-            <div className="text-right">
-              <div className="text-sm font-mono-display text-primary">
+            <div className="text-right text-xs flex-shrink-0 ml-2">
+              <div className="font-mono-display text-primary">
                 {new Date().toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
                 })}
               </div>
-              <div className="text-xs text-text-muted font-display">
+              <div className="text-text-muted font-display">
                 {state.profile.rank.toUpperCase()}
               </div>
             </div>
           </div>
 
           {/* Quick Stats Bar */}
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-1">
             <motion.div
-              className="bg-primary/10 border border-primary/30 rounded px-2 py-1.5"
-              whileHover={{ scale: 1.05 }}
+              className="bg-primary/10 border border-primary/30 rounded px-1.5 py-1"
+              whileTap={{ scale: 0.95 }}
             >
-              <p className="text-xs text-text-muted uppercase tracking-wide">Level</p>
+              <p className="text-xs text-text-muted uppercase tracking-wide">Lvl</p>
               <p className="text-lg font-display font-bold text-primary">
                 {state.profile.level}
               </p>
             </motion.div>
             <motion.div
-              className="bg-accent/10 border border-accent/30 rounded px-2 py-1.5"
-              whileHover={{ scale: 1.05 }}
+              className="bg-accent/10 border border-accent/30 rounded px-1.5 py-1"
+              whileTap={{ scale: 0.95 }}
             >
               <p className="text-xs text-text-muted uppercase tracking-wide">XP</p>
               <p className="text-lg font-display font-bold text-accent">
@@ -134,10 +134,10 @@ export default function Home() {
               </p>
             </motion.div>
             <motion.div
-              className="bg-success/10 border border-success/30 rounded px-2 py-1.5"
-              whileHover={{ scale: 1.05 }}
+              className="bg-success/10 border border-success/30 rounded px-1.5 py-1"
+              whileTap={{ scale: 0.95 }}
             >
-              <p className="text-xs text-text-muted uppercase tracking-wide">Quests</p>
+              <p className="text-xs text-text-muted uppercase tracking-wide">Quest</p>
               <p className="text-lg font-display font-bold text-success">
                 {state.dailyQuests.filter((q) => q.completed).length}/{state.dailyQuests.length}
               </p>
@@ -146,7 +146,7 @@ export default function Home() {
         </div>
 
         {/* Task Alerts with Shadow Soldiers */}
-        <div className="px-4 pt-4">
+        <div className="px-3 pt-3">
           <TaskAlerts 
             incompleteTasks={incompleteTasks} 
             onTaskClick={(taskId) => {
@@ -156,7 +156,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="px-4 space-y-4">
+        <div className="px-3 space-y-3">
           <AnimatePresence mode="wait">
             {/* STATUS TAB */}
             {activeTab === 'status' && (
