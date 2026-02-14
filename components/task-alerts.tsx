@@ -33,7 +33,7 @@ const Sparkle = ({ position, delay }: { position: { top: string; left: string; s
   </motion.div>
 )
 
-const ShadowAlert = ({ minion, quest, onGo, onClose }: { minion: ShadowMinion; quest: DailyQuest; onGo: () => void; onClose: () => void }) => {
+const ShadowAlert = ({ minion, quest, onGo, onClose }: { minion: ShadowMinion; quest: DailyQuest; onGo: () => void; onClose: (minion: ShadowMinion) => void }) => {
   const getEntranceAnimation = (type: string) => {
     switch (type) {
       case 'phase_through_wall':
@@ -151,7 +151,8 @@ const ShadowAlert = ({ minion, quest, onGo, onClose }: { minion: ShadowMinion; q
           <motion.button
             onClick={(e) => {
               e.stopPropagation()
-              onClose()
+              e.preventDefault()
+              onClose(minion)
             }}
             className="absolute -top-3 -right-3 p-1.5 rounded-full z-50 cursor-pointer hover:opacity-80 transition-opacity"
             style={{
