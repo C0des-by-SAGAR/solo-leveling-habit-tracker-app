@@ -206,12 +206,15 @@ export function TaskAlerts({ incompleteTasks, onTaskClick }: TaskAlertsProps) {
     const quest = getQuestForMinion(minion)
     if (quest) {
       onTaskClick?.(quest.id)
-      setDismissed((prev) => new Set([...prev, minion.assignedQuest]))
+      setDismissed((prev) => new Set([...prev, quest.name]))
     }
   }
 
   const handleClose = (minion: ShadowMinion) => {
-    setDismissed((prev) => new Set([...prev, minion.assignedQuest]))
+    const quest = getQuestForMinion(minion)
+    if (quest) {
+      setDismissed((prev) => new Set([...prev, quest.name]))
+    }
   }
 
   if (!summonedMinions.length) return null

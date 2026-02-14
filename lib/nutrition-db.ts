@@ -132,7 +132,7 @@ export function getNutritionData(
 }
 
 export function calculateHabitWarningLevel(
-  habitType: 'cigarettes' | 'alcohol' | 'screenTime',
+  habitType: 'cigarettes' | 'masturbation' | 'alcohol',
   count: number
 ): {
   level: 'safe' | 'caution' | 'warning'
@@ -165,6 +165,30 @@ export function calculateHabitWarningLevel(
         }
       }
 
+    case 'masturbation':
+      if (count === 0) {
+        return {
+          level: 'safe',
+          xpPenalty: 0,
+          message: 'Staying on track. Keep it up!',
+          breakStreak: false,
+        }
+      } else if (count <= 1) {
+        return {
+          level: 'caution',
+          xpPenalty: 5,
+          message: `${count} instance logged. Caution zone.`,
+          breakStreak: false,
+        }
+      } else {
+        return {
+          level: 'warning',
+          xpPenalty: 10 * (count - 1),
+          message: `⚠️ ${count} instances. Streak broken. Heavy penalty.`,
+          breakStreak: true,
+        }
+      }
+
     case 'alcohol':
       if (count === 0) {
         return {
@@ -185,30 +209,6 @@ export function calculateHabitWarningLevel(
           level: 'warning',
           xpPenalty: 30 * count,
           message: `⚠️ ${count} drinks! Streak broken. Major penalty.`,
-          breakStreak: true,
-        }
-      }
-
-    case 'screenTime':
-      if (count <= 120) {
-        return {
-          level: 'safe',
-          xpPenalty: 0,
-          message: `${count}min screen time. Within healthy limits.`,
-          breakStreak: false,
-        }
-      } else if (count <= 180) {
-        return {
-          level: 'caution',
-          xpPenalty: Math.floor((count - 120) / 20) * 5,
-          message: `${count}min screen time. Caution zone.`,
-          breakStreak: false,
-        }
-      } else {
-        return {
-          level: 'warning',
-          xpPenalty: Math.floor((count - 180) / 30) * 15,
-          message: `⚠️ ${count}min screen time! Excessive. Streak broken.`,
           breakStreak: true,
         }
       }

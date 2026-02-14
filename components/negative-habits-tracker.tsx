@@ -9,7 +9,7 @@ import { calculateHabitWarningLevel } from '@/lib/nutrition-db'
 
 interface NegativeHabitsTrackerProps {
   habits: NegativeHabit
-  onLogHabit: (type: 'cigarettes' | 'masturbation' | 'alcohol' | 'screenTime', data: any) => void
+  onLogHabit: (type: 'cigarettes' | 'masturbation' | 'alcohol', data: any) => void
   onStreakBroken?: (habit: string) => void
 }
 
@@ -34,14 +34,9 @@ export function NegativeHabitsTracker({
     'alcohol',
     habits.alcohol.count
   )
-  const screenTimeTotal =
-    habits.screenTime.instagram +
-    habits.screenTime.youtube +
-    habits.screenTime.netflix +
-    habits.screenTime.other
-  const screenTimeWarning = calculateHabitWarningLevel(
-    'screenTime',
-    screenTimeTotal
+  const masturbationWarning = calculateHabitWarningLevel(
+    'masturbation',
+    habits.masturbation?.count ?? 0
   )
 
   const getWarningColor = (level: 'safe' | 'caution' | 'warning') => {
@@ -55,36 +50,12 @@ export function NegativeHabitsTracker({
     }
   }
 
-  const cigaretteStatus = {
-    color: getWarningColor(cigaretteWarning),
-    textColor: 'text-text-primary',
-    label: cigaretteWarning === 'safe' ? 'Safe' : cigaretteWarning === 'caution' ? 'Caution' : 'Warning'
-  }
-
-  const masturbationStatus = {
-    color: getWarningColor('masturbation'), // Assuming 'masturbation' is always 'safe' for simplicity
-    textColor: 'text-text-primary',
-    label: 'Safe'
-  }
-
-  const alcoholStatus = {
-    color: getWarningColor(alcoholWarning),
-    textColor: 'text-text-primary',
-    label: alcoholWarning === 'safe' ? 'Safe' : alcoholWarning === 'caution' ? 'Caution' : 'Warning'
-  }
-
-  const screenTimeStatus = {
-    color: getWarningColor(screenTimeWarning),
-    textColor: 'text-text-primary',
-    label: screenTimeWarning === 'safe' ? 'Safe' : screenTimeWarning === 'caution' ? 'Caution' : 'Warning'
-  }
-
   return (
     <div className="space-y-4 pb-20">
       {/* System Warnings Alert */}
       {(cigaretteWarning.breakStreak ||
         alcoholWarning.breakStreak ||
-        screenTimeWarning.breakStreak) && (
+        masturbationWarning.breakStreak) && (
         <motion.div
           className="glass-card border-danger/50 bg-danger/10 p-4"
           animate={{ borderColor: ['rgba(239, 68, 68, 0.5)', 'rgba(239, 68, 68, 0.2)'] }}
@@ -191,60 +162,44 @@ export function NegativeHabitsTracker({
         </div>
       </motion.div>
 
-      {/* Screen Time */}
+      {/* Masturbation */}
       <motion.div
-        className={`glass-card p-4 border-2 transition-all ${getWarningColor(screenTimeWarning.level)}`}
+        className={`glass-card p-4 border-2 transition-all ${getWarningColor(masturbationWarning.level)}`}
         whileHover={{ scale: 1.02 }}
+        animate={showAnimation === 'masturbation' ? { scale: [1, 1.05, 1] } : {}}
       >
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-display text-primary">Screen Time</h3>
-          <span
-            className={`text-xs font-mono-display px-2 py-1 rounded font-bold ${getWarningColor(screenTimeWarning.level)}`}
-          >
-            {screenTimeWarning.level.toUpperCase()}
-          </span>
-        </div>
-
-        <div className="space-y-3">
-          {/* App breakdown */}
-          <div className="space-y-2 bg-bg-secondary/50 p-3 rounded-lg">
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-text-secondary">Instagram</span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-mono-display text-accent">
-                  {habits.screenTime.instagram}m
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-text-secondary">YouTube</span>
-              <span className="text-sm font-mono-display text-accent">
-                {habits.screenTime.youtube}m
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-text-secondary">Netflix</span>
-              <span className="text-sm font-mono-display text-accent">
-                {habits.screenTime.netflix}m
-              </span>
-            </div>
-            <div className="border-t border-primary/20 pt-2 flex justify-between items-center">
-              <span className="text-xs text-text-secondary font-bold">Total</span>
-              <span className="text-sm font-mono-display text-primary font-bold">
-                {screenTimeTotal}m
-              </span>
-            </div>
+          <h3 className="text-sm font-display text-primary">Masturbation</h3>
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-xs font-mono-display px-2 py-1 rounded font-bold ${getWarningColor(masturbationWarning.level)}`}
+            >
+              {masturbationWarning.level.toUpperCase()}
+            </span>
           </div>
-
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="text-3xl font-display text-text-primary">
+              {habits.masturbation?.count ?? 0}
+            </div>
+            <motion.button
+              onClick={() => handleHabitIncrement('masturbation')}
+              className="bg-primary/30 hover:bg-primary/50 p-3 rounded-lg transition-colors"
+              whileTap={{ scale: 0.9 }}
+            >
+              <Plus className="w-5 h-5 text-primary" />
+            </motion.button>
+          </div>
           <p className="text-xs text-text-secondary">
-            {screenTimeWarning.message}
+            {masturbationWarning.message}
           </p>
-          {screenTimeWarning.xpPenalty > 0 && (
+          {masturbationWarning.xpPenalty > 0 && (
             <div className="text-xs font-bold text-danger">
-              -{screenTimeWarning.xpPenalty} XP Penalty
+              -{masturbationWarning.xpPenalty} XP Penalty
             </div>
           )}
-          {screenTimeWarning.breakStreak && (
+          {masturbationWarning.breakStreak && (
             <div className="text-xs font-bold text-danger">
               🔥 Streak Broken
             </div>

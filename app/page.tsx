@@ -83,32 +83,21 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-text-primary relative overflow-hidden">
-      {/* Themed Background with Characters */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-primary to-bg-primary/80" />
-        <img 
-          src="/jinwoo-bg.jpg" 
-          alt="Jin Woo"
-          className="absolute left-0 top-1/2 -translate-y-1/2 h-screen object-cover opacity-30"
-        />
-        <img 
-          src="/igris-bg.jpg" 
-          alt="Igris"
-          className="absolute right-0 top-1/2 -translate-y-1/2 h-screen object-cover opacity-30"
-        />
-      </div>
+      {/* Simple background for working interface (Pixel 9A) */}
+      <div className="fixed inset-0 z-0 bg-bg-primary" />
 
       <div className="w-screen max-w-md mx-auto pb-20 relative z-10">
         {/* Epic Header with Glassmorphism */}
         <div className="sticky top-0 z-40 bg-black/40 backdrop-blur-xl border-b border-primary/20 px-3 py-2">
           <div className="flex items-center justify-between mb-2">
-            <div className="min-w-0">
-              <h1 className="cyan-neon truncate">
-                SOLO LEVELING
+            <div className="min-w-0 flex flex-col gap-0.5">
+              <h1 className="title-solo-leveling text-2xl sm:text-3xl md:text-4xl">
+                <span>SOLO</span>
+                <span className="title-line-2">LEVELING</span>
               </h1>
-              <p className="text-xs text-accent tracking-widest">SHADOW MONARCH</p>
+              <p className="text-sm text-accent tracking-widest">SHADOW MONARCH</p>
             </div>
-            <div className="text-right text-xs flex-shrink-0 ml-2">
+            <div className="text-right text-sm flex-shrink-0 ml-2">
               <div className="font-mono-display text-primary">
                 {new Date().toLocaleDateString('en-US', {
                   month: 'short',
@@ -127,8 +116,8 @@ export default function Home() {
               className="bg-primary/10 border border-primary/30 rounded px-1.5 py-1"
               whileTap={{ scale: 0.95 }}
             >
-              <p className="text-xs text-text-muted uppercase tracking-wide">Lvl</p>
-              <p className="text-lg font-display font-bold text-primary">
+              <p className="text-sm text-text-muted uppercase tracking-wide">Lvl</p>
+              <p className="text-xl font-display font-bold text-primary">
                 {state.profile.level}
               </p>
             </motion.div>
@@ -136,8 +125,8 @@ export default function Home() {
               className="bg-accent/10 border border-accent/30 rounded px-1.5 py-1"
               whileTap={{ scale: 0.95 }}
             >
-              <p className="text-xs text-text-muted uppercase tracking-wide">XP</p>
-              <p className="text-lg font-display font-bold text-accent">
+              <p className="text-sm text-text-muted uppercase tracking-wide">XP</p>
+              <p className="text-xl font-display font-bold text-accent">
                 +{totalXpGained}
               </p>
             </motion.div>
@@ -145,8 +134,8 @@ export default function Home() {
               className="bg-success/10 border border-success/30 rounded px-1.5 py-1"
               whileTap={{ scale: 0.95 }}
             >
-              <p className="text-xs text-text-muted uppercase tracking-wide">Quest</p>
-              <p className="text-lg font-display font-bold text-success">
+              <p className="text-sm text-text-muted uppercase tracking-wide">Quest</p>
+              <p className="text-xl font-display font-bold text-success">
                 {state.dailyQuests.filter((q) => q.completed).length}/{state.dailyQuests.length}
               </p>
             </motion.div>

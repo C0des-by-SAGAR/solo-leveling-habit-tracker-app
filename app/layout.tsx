@@ -12,12 +12,6 @@ export const metadata: Metadata = {
   description:
     'Experience the legendary Solo Leveling RPG life-tracking system. Level up, complete quests, and become the Shadow Monarch.',
   generator: 'v0.app',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
 }
 
 export const viewport: Viewport = {

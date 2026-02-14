@@ -47,12 +47,13 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
 
         <div className="space-y-2">
           <motion.h1
-            className="text-5xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-glow"
+            className="title-solo-leveling text-4xl sm:text-5xl"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            SOLO LEVELING
+            <span>SOLO</span>
+            <span className="title-line-2">LEVELING</span>
           </motion.h1>
 
           <motion.p

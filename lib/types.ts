@@ -128,16 +128,6 @@ export interface NegativeHabit {
     xpPenalty: number;
     breakStreak: boolean;
   };
-  screenTime: {
-    total: number;
-    instagram: number;
-    youtube: number;
-    netflix: number;
-    other: number;
-    warningLevel: 'safe' | 'caution' | 'warning';
-    xpPenalty: number;
-    breakStreak: boolean;
-  };
 }
 
 export interface DailySleep {

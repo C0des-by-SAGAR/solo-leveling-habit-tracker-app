@@ -228,9 +228,8 @@ const DEFAULT_STATE: GameState = {
   streak: DEFAULT_STREAK,
   habits: {
     cigarettes: { count: 0, xpPenalty: 0 },
-    masturbation: { count: 0, triggers: [], xpPenalty: 0 },
-    alcohol: { count: 0, type: [], xpPenalty: 0 },
-    screenTime: { instagram: 0, youtube: 0, netflix: 0, other: 0, xpPenalty: 0 },
+    masturbation: { count: 0, xpPenalty: 0 },
+    alcohol: { count: 0, xpPenalty: 0 },
   },
   sleepLog: [],
   dailySummaries: [],
@@ -363,7 +362,7 @@ export function useGameState() {
   )
 
   const logHabit = useCallback(
-    (type: 'cigarettes' | 'masturbation' | 'alcohol' | 'screenTime', data: any) => {
+    (type: 'cigarettes' | 'masturbation' | 'alcohol', data: any) => {
       const newState = { ...state }
       
       switch (type) {
@@ -374,23 +373,18 @@ export function useGameState() {
             newState.profile.currentXP -= 5
           }
           break
+        case 'masturbation':
+          newState.habits.masturbation.count += 1
+          if (newState.habits.masturbation.count > 1) {
+            newState.habits.masturbation.xpPenalty = (newState.habits.masturbation.count - 1) * 10
+            newState.profile.currentXP -= 10
+          }
+          break
         case 'alcohol':
           newState.habits.alcohol.count += 1
           if (newState.habits.alcohol.count > 1) {
             newState.habits.alcohol.xpPenalty = (newState.habits.alcohol.count - 1) * 15
             newState.profile.currentXP -= 15
-          }
-          break
-        case 'screenTime':
-          newState.habits.screenTime.instagram += data.instagram || 0
-          newState.habits.screenTime.youtube += data.youtube || 0
-          newState.habits.screenTime.netflix += data.netflix || 0
-          newState.habits.screenTime.other += data.other || 0
-          const total = newState.habits.screenTime.instagram + newState.habits.screenTime.youtube + newState.habits.screenTime.netflix + newState.habits.screenTime.other
-          if (total > 120) {
-            const penalty = Math.floor((total - 120) / 30) * 10
-            newState.habits.screenTime.xpPenalty = penalty
-            newState.profile.currentXP -= penalty
           }
           break
       }

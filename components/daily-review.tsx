@@ -34,7 +34,7 @@ export function DailyReview({ gameState, onSubmitReview }: DailyReviewProps) {
     let total = 0
     total += gameState.habits.cigarettes.xpPenalty
     total += gameState.habits.alcohol.xpPenalty
-    total += gameState.habits.screenTime.xpPenalty
+    total += gameState.habits.masturbation.xpPenalty
     return total
   }
 
@@ -182,9 +182,9 @@ export function DailyReview({ gameState, onSubmitReview }: DailyReviewProps) {
             </div>
           )}
 
-          {gameState.habits.screenTime.instagram + gameState.habits.screenTime.youtube + gameState.habits.screenTime.netflix + gameState.habits.screenTime.other > 240 && (
+          {gameState.habits.masturbation.count > 1 && (
             <div className="text-xs text-warning p-2 bg-warning/10 rounded border border-warning/20">
-              Screen time exceeding healthy limits
+              Masturbation habit above caution threshold
             </div>
           )}
 
