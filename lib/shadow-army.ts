@@ -28,8 +28,8 @@ export const SHADOW_ARMY: ShadowMinion[] = [
     entranceType: 'phase_through_wall',
     position: 'left',
     size: 'lg',
-    sprite: '/minions-igris.jpg',
-    glowColor: '#ef4444',
+    sprite: '/minion-igris.png',
+    glowColor: '#06b6d4',
   },
   {
     id: 'beru',
@@ -42,7 +42,7 @@ export const SHADOW_ARMY: ShadowMinion[] = [
     entranceType: 'crystallize',
     position: 'left',
     size: 'md',
-    sprite: '/minions-beru.jpg',
+    sprite: '/minion-beru.png',
     glowColor: '#06b6d4',
   },
   {
@@ -56,7 +56,7 @@ export const SHADOW_ARMY: ShadowMinion[] = [
     entranceType: 'rise_from_shadow',
     position: 'left',
     size: 'lg',
-    sprite: '/minions-igris.jpg',
+    sprite: '/minion-iron.png',
     glowColor: '#6366f1',
   },
   {
@@ -70,7 +70,7 @@ export const SHADOW_ARMY: ShadowMinion[] = [
     entranceType: 'descend_from_top',
     position: 'center',
     size: 'lg',
-    sprite: '/minions-igris.jpg',
+    sprite: '/minion-kaisel.png',
     glowColor: '#a855f7',
   },
   {
@@ -84,7 +84,7 @@ export const SHADOW_ARMY: ShadowMinion[] = [
     entranceType: 'unfold_from_darkness',
     position: 'right',
     size: 'md',
-    sprite: '/minions-tusk.jpg',
+    sprite: '/minion-tusk.png',
     glowColor: '#f97316',
   },
   {
@@ -98,7 +98,7 @@ export const SHADOW_ARMY: ShadowMinion[] = [
     entranceType: 'roll_in',
     position: 'left',
     size: 'sm',
-    sprite: '/minions-igris.jpg',
+    sprite: '/minion-tank.png',
     glowColor: '#10b981',
   },
 ]

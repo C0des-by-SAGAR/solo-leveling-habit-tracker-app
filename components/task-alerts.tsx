@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { X } from 'lucide-react'
 import type { DailyQuest } from '@/lib/types'
 import { SHADOW_ARMY, getSummonedMinions, type ShadowMinion } from '@/lib/shadow-army'
 
@@ -32,7 +33,7 @@ const Sparkle = ({ position, delay }: { position: { top: string; left: string; s
   </motion.div>
 )
 
-const ShadowAlert = ({ minion, quest, onGo }: { minion: ShadowMinion; quest: DailyQuest; onGo: () => void }) => {
+const ShadowAlert = ({ minion, quest, onGo, onClose }: { minion: ShadowMinion; quest: DailyQuest; onGo: () => void; onClose: () => void }) => {
   const getEntranceAnimation = (type: string) => {
     switch (type) {
       case 'phase_through_wall':
@@ -126,7 +127,7 @@ const ShadowAlert = ({ minion, quest, onGo }: { minion: ShadowMinion; quest: Dai
 
         {/* Alert Card */}
         <motion.div
-          className="flex-1 p-5 rounded-2xl border-2 backdrop-blur-2xl"
+          className="flex-1 p-5 rounded-2xl border-2 backdrop-blur-2xl relative"
           style={{
             background: 'rgba(8, 6, 18, 0.88)',
             borderColor: minion.glowColor,
@@ -146,6 +147,19 @@ const ShadowAlert = ({ minion, quest, onGo }: { minion: ShadowMinion; quest: Dai
           }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         >
+          {/* Close Button */}
+          <motion.button
+            onClick={onClose}
+            className="absolute -top-2 -right-2 p-1 rounded-full transition-colors"
+            style={{
+              background: minion.glowColor,
+            }}
+            whileTap={{ scale: 0.85 }}
+            whileHover={{ scale: 1.1 }}
+          >
+            <X size={16} className="text-black" />
+          </motion.button>
+
           <p className="text-xs font-display font-bold tracking-widest text-primary uppercase mb-2">
             Shadow Alert
           </p>
@@ -191,6 +205,10 @@ export function TaskAlerts({ incompleteTasks, onTaskClick }: TaskAlertsProps) {
     }
   }
 
+  const handleClose = (minion: ShadowMinion) => {
+    setDismissed((prev) => new Set([...prev, minion.assignedQuest]))
+  }
+
   if (!summonedMinions.length) return null
 
   return (
@@ -203,6 +221,7 @@ export function TaskAlerts({ incompleteTasks, onTaskClick }: TaskAlertsProps) {
             minion={minion}
             quest={quest}
             onGo={() => handleGo(minion)}
+            onClose={() => handleClose(minion)}
           />
         ) : null
       })}
