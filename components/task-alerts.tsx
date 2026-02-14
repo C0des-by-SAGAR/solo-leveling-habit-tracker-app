@@ -149,15 +149,19 @@ const ShadowAlert = ({ minion, quest, onGo, onClose }: { minion: ShadowMinion; q
         >
           {/* Close Button */}
           <motion.button
-            onClick={onClose}
-            className="absolute -top-2 -right-2 p-1 rounded-full transition-colors"
+            onClick={(e) => {
+              e.stopPropagation()
+              onClose()
+            }}
+            className="absolute -top-3 -right-3 p-1.5 rounded-full z-50 cursor-pointer hover:opacity-80 transition-opacity"
             style={{
               background: minion.glowColor,
+              boxShadow: `0 0 8px ${minion.glowColor}`,
             }}
             whileTap={{ scale: 0.85 }}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.15 }}
           >
-            <X size={16} className="text-black" />
+            <X size={18} className="text-black font-bold" strokeWidth={3} />
           </motion.button>
 
           <p className="text-xs font-display font-bold tracking-widest text-primary uppercase mb-2">
