@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type {
   GameState,
   HunterProfile,
@@ -13,6 +13,9 @@ import type {
   DailySleep,
   DailySummary,
 } from '@/lib/types'
+import { getSupabaseClient, isSupabaseConfigured } from '@/lib/supabase/client'
+import { fetchGameState, upsertGameState } from '@/lib/supabase/game-state'
+import { useAuth } from './use-auth'
 
 const STORAGE_KEY = 'solo-leveling-game-state'
 
@@ -236,25 +239,96 @@ const DEFAULT_STATE: GameState = {
 }
 
 export function useGameState() {
+  const { user, isAuthenticated } = useAuth()
   const [state, setState] = useState<GameState>(DEFAULT_STATE)
   const [isLoaded, setIsLoaded] = useState(false)
+  const hasMigratedRef = useRef(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) {
+    if (!isSupabaseConfigured()) {
+      // Fallback: localStorage only (original behavior)
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        try {
+          setState(JSON.parse(saved))
+        } catch (e) {
+          console.error('Failed to load game state', e)
+        }
+      }
+      setIsLoaded(true)
+      return
+    }
+
+    // Wait for auth to be determined
+    if (!isAuthenticated) {
+      setIsLoaded(true)
+      return
+    }
+
+    if (!user?.id) {
+      setIsLoaded(true)
+      return
+    }
+
+    // Load from Supabase only (no localStorage when authenticated)
+    let cancelled = false
+    async function load() {
       try {
-        setState(JSON.parse(saved))
-      } catch (e) {
-        console.error('Failed to load game state', e)
+        const userId = user.id
+
+        // Try to fetch from Supabase
+        const dbState = await fetchGameState(userId)
+        
+        if (cancelled) {
+          setIsLoaded(true)
+          return
+        }
+
+        if (dbState) {
+          // Supabase has data: merge with defaults to ensure all fields exist
+          const mergedState = { ...DEFAULT_STATE, ...dbState }
+          setState(mergedState)
+        } else {
+          // Supabase empty: check localStorage for one-time migration
+          const saved = localStorage.getItem(STORAGE_KEY)
+          if (saved && !hasMigratedRef.current) {
+            try {
+              const localState = JSON.parse(saved) as GameState
+              setState(localState)
+              // Migrate localStorage to Supabase (one-time)
+              await upsertGameState(userId, localState)
+              hasMigratedRef.current = true
+              console.log('✅ Migrated localStorage data to Supabase')
+              // Clear localStorage after migration
+              localStorage.removeItem(STORAGE_KEY)
+            } catch (e) {
+              console.error('Failed to load/migrate game state', e)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading game state:', error)
+      } finally {
+        setIsLoaded(true)
       }
     }
-    setIsLoaded(true)
-  }, [])
+    
+    load()
+    return () => { cancelled = true }
+  }, [user, isAuthenticated])
 
   const saveState = useCallback((newState: GameState) => {
     setState(newState)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newState))
-  }, [])
+    // Only save to Supabase when authenticated (no localStorage)
+    if (isSupabaseConfigured() && isAuthenticated && user?.id) {
+      upsertGameState(user.id, newState).catch((error) => {
+        console.error('Failed to save to Supabase:', error)
+      })
+    } else if (!isSupabaseConfigured()) {
+      // Fallback to localStorage only if Supabase not configured
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newState))
+    }
+  }, [user, isAuthenticated])
 
   const completeQuest = useCallback(
     (questId: string) => {

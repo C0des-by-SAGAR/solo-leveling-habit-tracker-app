@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGameState } from '@/hooks/use-game-state'
+import { useAuth } from '@/hooks/use-auth'
+import { AuthForm } from '@/components/auth/auth-form'
 import { BottomNav } from '@/components/bottom-nav'
 import { ProfileHeader } from '@/components/profile-header'
 import { VitalsDisplay } from '@/components/vitals-display'
@@ -24,16 +26,12 @@ import { Button } from '@/components/ui/button'
 type TabType = 'status' | 'quests' | 'skills' | 'streak' | 'habits' | 'nutrition' | 'vitals' | 'review'
 
 export default function Home() {
+  const { isAuthenticated, loading: authLoading, signOut, user } = useAuth()
   const { state, isLoaded, completeQuest, resetDailyQuests, addWorkout, logMeal, logHabit, logSleep, logDailySummary } =
     useGameState()
   const [activeTab, setActiveTab] = useState<TabType>('status')
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [previousLevel, setPreviousLevel] = useState(1)
-
-  const completionRate =
-    (state.dailyQuests.filter((q) => q.completed).length /
-      state.dailyQuests.length) *
-    100
 
   useEffect(() => {
     if (state.profile.level > previousLevel) {
@@ -41,6 +39,16 @@ export default function Home() {
       setPreviousLevel(state.profile.level)
     }
   }, [state.profile.level, previousLevel])
+
+  // Show auth form if not authenticated (after all hooks)
+  if (!authLoading && !isAuthenticated) {
+    return <AuthForm onAuthSuccess={() => window.location.reload()} />
+  }
+
+  const completionRate =
+    (state.dailyQuests.filter((q) => q.completed).length /
+      state.dailyQuests.length) *
+    100
 
   const handleQuestComplete = (questId: string) => {
     completeQuest(questId)
@@ -107,6 +115,15 @@ export default function Home() {
               <div className="text-text-muted font-display">
                 {state.profile.rank.toUpperCase()}
               </div>
+              {user?.email && (
+                <button
+                  onClick={signOut}
+                  className="text-xs text-primary hover:text-accent mt-1 font-display font-semibold"
+                  title="Sign out"
+                >
+                  LogOut
+                </button>
+              )}
             </div>
           </div>
 
